@@ -85,9 +85,15 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding-bottom: 2rem;
+        padding-bottom: 1.5rem;
         border-bottom: 1px solid var(--border-color);
         margin-bottom: 2rem;
+      }
+
+      .header-left {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
       }
 
       .logo {
@@ -105,14 +111,111 @@
         color: var(--accent);
       }
 
+      .shortcuts-bar {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
       /* --- Controls --- */
+      .controls-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
       .controls-bar {
         display: flex;
         flex-wrap: wrap;
         gap: 1rem;
-        margin-bottom: 2rem;
         align-items: center;
         justify-content: space-between;
+      }
+
+      .tweak-panel {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        padding: 1rem 1.5rem;
+        border-radius: var(--radius);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        align-items: center;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+
+      .tweak-group {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .tweak-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        white-space: nowrap;
+        width: 80px;
+      }
+
+      .range-input {
+        width: 100%;
+        height: 6px;
+        border-radius: 3px;
+        background: var(--border-color);
+        outline: none;
+        -webkit-appearance: none;
+        cursor: pointer;
+      }
+
+      /* Range Slider Styling */
+      .range-input::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--accent);
+        cursor: pointer;
+        border: 2px solid var(--bg-card);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        transition: transform 0.1s;
+      }
+
+      .range-input::-webkit-slider-thumb:hover {
+        transform: scale(1.1);
+      }
+      .range-input::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--accent);
+        cursor: pointer;
+        border: 2px solid var(--bg-card);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Hue Gradient Background for Hue Slider */
+      #hue-slider {
+        background: linear-gradient(
+          to right,
+          #ff0000 0%,
+          #ffff00 17%,
+          #00ff00 33%,
+          #00ffff 50%,
+          #0000ff 67%,
+          #ff00ff 83%,
+          #ff0000 100%
+        );
       }
 
       .btn-group {
@@ -449,6 +552,9 @@
 
       /* --- Responsive Adjustments --- */
       @media (max-width: 640px) {
+        .shortcuts-bar {
+          display: none;
+        } /* Hidden on mobile */
         .controls-bar {
           flex-direction: column;
           align-items: stretch;
@@ -467,6 +573,11 @@
         #preview-heading {
           font-size: 1.75rem;
         }
+        .tweak-panel {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 1rem;
+        }
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -480,113 +591,138 @@
   <body>
     <div class="container">
       <header>
-        <div class="logo">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round">
-            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
-          </svg>
-          Palette Font Kit
+        <div class="header-left">
+          <div class="logo">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+            </svg>
+            Palette Font Kit
+          </div>
+          <!-- Moved shortcuts here, hidden on mobile via CSS -->
+          <div class="shortcuts-bar">
+            <span><span class="shortcut-hint">Space</span> Shuffle</span>
+            <span><span class="shortcut-hint">S</span> Save</span>
+            <span><span class="shortcut-hint">C</span> Copy CSS</span>
+          </div>
         </div>
-        <button id="theme-btn" class="theme-toggle" aria-label="Toggle Dark Mode">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5" />
-            <path
-              d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
-          </svg>
-        </button>
+
+        <div class="header-actions">
+          <button id="theme-btn" class="theme-toggle" aria-label="Toggle Dark Mode">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5" />
+              <path
+                d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+            </svg>
+          </button>
+        </div>
       </header>
 
       <main>
-        <section class="controls-bar">
-          <!-- Defaults -->
-          <div class="btn-group">
-            <button class="btn" onclick="app.loadPreset('minimal')">Minimal</button>
-            <button class="btn" onclick="app.loadPreset('playful')">Playful</button>
-            <button class="btn" onclick="app.loadPreset('bold')">Bold</button>
-          </div>
+        <div class="controls-wrapper">
+          <section class="controls-bar">
+            <!-- Defaults -->
+            <div class="btn-group">
+              <button class="btn" onclick="app.loadPreset('minimal')">Minimal</button>
+              <button class="btn" onclick="app.loadPreset('playful')">Playful</button>
+              <button class="btn" onclick="app.loadPreset('bold')">Bold</button>
+            </div>
 
-          <!-- Main Actions -->
-          <div class="btn-group">
-            <button class="btn btn-primary" id="shuffle-btn">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="16 3 21 3 21 8"></polyline>
-                <line x1="4" y1="20" x2="21" y2="3"></line>
-                <polyline points="21 16 21 21 16 21"></polyline>
-                <line x1="15" y1="15" x2="21" y2="21"></line>
-                <line x1="4" y1="4" x2="9" y2="9"></line>
-              </svg>
-              Shuffle
-            </button>
-            <button class="btn" id="save-btn" title="Save to Favorites (S)">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round">
-                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-              </svg>
-              Save
-            </button>
-            <button class="btn" id="copy-css-btn" title="Copy CSS Variables (C)">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="16 18 22 12 16 6"></polyline>
-                <polyline points="8 6 2 12 8 18"></polyline>
-              </svg>
-              CSS
-            </button>
-            <button class="btn" id="export-json-btn">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
-              JSON
-            </button>
-          </div>
-        </section>
+            <!-- Main Actions -->
+            <div class="btn-group">
+              <button class="btn btn-primary" id="shuffle-btn">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <polyline points="16 3 21 3 21 8"></polyline>
+                  <line x1="4" y1="20" x2="21" y2="3"></line>
+                  <polyline points="21 16 21 21 16 21"></polyline>
+                  <line x1="15" y1="15" x2="21" y2="21"></line>
+                  <line x1="4" y1="4" x2="9" y2="9"></line>
+                </svg>
+                Shuffle
+              </button>
+              <button class="btn" id="save-btn" title="Save to Favorites (S)">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                </svg>
+                Save
+              </button>
+              <button class="btn" id="copy-css-btn" title="Copy CSS Variables (C)">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <polyline points="16 18 22 12 16 6"></polyline>
+                  <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+                CSS
+              </button>
+              <button class="btn" id="export-json-btn">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                JSON
+              </button>
+            </div>
+          </section>
+
+          <!-- Tweaks Section -->
+          <section class="tweak-panel">
+            <div class="tweak-group">
+              <label for="hue-slider" class="tweak-label">Base Hue</label>
+              <input type="range" id="hue-slider" class="range-input" min="0" max="360" value="0" />
+            </div>
+            <div class="tweak-group">
+              <label for="sat-slider" class="tweak-label">Saturation</label>
+              <input type="range" id="sat-slider" class="range-input" min="0" max="100" value="50" />
+            </div>
+          </section>
+        </div>
 
         <div class="dashboard-grid">
           <!-- Preview Section -->
@@ -656,11 +792,7 @@
       </main>
 
       <footer>
-        <p>
-          Shortcuts: <span class="shortcut-hint">Space</span> Shuffle &nbsp;|&nbsp;
-          <span class="shortcut-hint">S</span> Save &nbsp;|&nbsp; <span class="shortcut-hint">C</span> Copy CSS
-        </p>
-        <p style="margin-top: 0.5rem; opacity: 0.6">&copy; 2023 Palette Font Kit. Open Source.</p>
+        <p style="opacity: 0.6">&copy; 2023 Palette Font Kit. Open Source.</p>
       </footer>
     </div>
 
@@ -697,22 +829,32 @@
 
       const PRESETS = {
         minimal: {
+          // Need to reverse-engineer HSL roughly for sliders or just ignore logic for presets
+          // For simplicity, we just set sliders to 0/0 visually when preset loads, or guess
+          hue: 220,
+          saturation: 20,
           palette: ['#111827', '#374151', '#9CA3AF', '#F3F4F6', '#FFFFFF'],
           fonts: { heading: 'Inter', body: 'Inter' },
         },
         playful: {
+          hue: 260,
+          saturation: 80,
           palette: ['#4C1D95', '#8B5CF6', '#F472B6', '#FDE047', '#FFFBEB'],
           fonts: { heading: 'Quicksand', body: 'Nunito' },
         },
         bold: {
+          hue: 0,
+          saturation: 90,
           palette: ['#000000', '#D00000', '#FFBA08', '#3F88C5', '#F8F9FA'],
           fonts: { heading: 'Oswald', body: 'Roboto' },
         },
       };
 
-      const App = (() => {
+      const app = (() => {
         // State
         let state = {
+          hue: 200,
+          saturation: 60,
           palette: [],
           fonts: { heading: '', body: '' },
           favorites: [],
@@ -730,6 +872,8 @@
           favoritesList: document.getElementById('favorites-list'),
           toast: document.getElementById('toast'),
           html: document.documentElement,
+          hueSlider: document.getElementById('hue-slider'),
+          satSlider: document.getElementById('sat-slider'),
         };
 
         // --- Core Functions ---
@@ -759,6 +903,16 @@
           document.getElementById('theme-btn').addEventListener('click', toggleTheme);
           document.getElementById('clear-favs').addEventListener('click', clearFavorites);
 
+          // Tweak Listeners
+          els.hueSlider.addEventListener('input', (e) => {
+            state.hue = parseInt(e.target.value);
+            updatePaletteFromState();
+          });
+          els.satSlider.addEventListener('input', (e) => {
+            state.saturation = parseInt(e.target.value);
+            updatePaletteFromState();
+          });
+
           // Keyboard Shortcuts
           document.addEventListener('keydown', (e) => {
             // Ignore if in input
@@ -777,32 +931,39 @@
 
         // --- Logic: Colors ---
 
-        function generatePalette() {
-          // HSL based generation for better cohesion
-          const hue = Math.floor(Math.random() * 360);
-          const saturation = Math.floor(Math.random() * 40) + 40; // 40-80%
+        function generateRandomValues() {
+          state.hue = Math.floor(Math.random() * 360);
+          state.saturation = Math.floor(Math.random() * 40) + 40; // 40-80%
+        }
 
-          // Strategy: Monochromatic with variation in Lightness
-          // Plus one accent color (Complementary or split)
+        function updatePaletteFromState() {
+          const h = state.hue;
+          const s = state.saturation;
+
+          // Sync UI sliders if they aren't the source of the event
+          // (We just always update them for simplicity in non-input triggers)
+          els.hueSlider.value = h;
+          els.satSlider.value = s;
 
           const colors = [];
 
-          // Dark text/bg
-          colors.push(HSLtoHex(hue, saturation, 10));
+          // 0: Dark text/bg (low lightness)
+          colors.push(HSLtoHex(h, s, 10));
 
-          // Main brand
-          colors.push(HSLtoHex(hue, saturation, 45));
+          // 1: Main brand (medium lightness)
+          colors.push(HSLtoHex(h, s, 45));
 
-          // Secondary/Accent (Shift hue 30deg)
-          colors.push(HSLtoHex((hue + 30) % 360, saturation, 60));
+          // 2: Secondary/Accent (Shift hue 30deg, lighter)
+          colors.push(HSLtoHex((h + 30) % 360, s, 60));
 
-          // Light accent
-          colors.push(HSLtoHex(hue, saturation - 10, 85));
+          // 3: Light accent (Desaturated or lighter)
+          colors.push(HSLtoHex(h, Math.max(0, s - 10), 85));
 
-          // Background
-          colors.push(HSLtoHex(hue, 10, 97));
+          // 4: Background (Very light)
+          colors.push(HSLtoHex(h, 10, 97));
 
-          return colors;
+          state.palette = colors;
+          applyState();
         }
 
         function HSLtoHex(h, s, l) {
@@ -824,14 +985,10 @@
           const heading = FONT_LIBRARY[Math.floor(Math.random() * FONT_LIBRARY.length)];
           let body;
 
-          // Simple logic: If heading is Serif, make body Sans. If heading Sans, body Sans.
-          // Avoid Serif body for UI typically, but for this preview let's stick to readable Sans for body mostly.
-
           if (heading.category === 'serif') {
             const sansList = FONT_LIBRARY.filter((f) => f.category === 'sans-serif');
             body = sansList[Math.floor(Math.random() * sansList.length)];
           } else {
-            // Random anything else
             const remaining = FONT_LIBRARY.filter((f) => f.name !== heading.name);
             body = remaining[Math.floor(Math.random() * remaining.length)];
           }
@@ -878,15 +1035,24 @@
         // --- Actions ---
 
         function shuffle() {
-          state.palette = generatePalette();
+          generateRandomValues();
           state.fonts = pickFontPair();
-          applyState();
+          updatePaletteFromState();
         }
 
         function loadPreset(name) {
           const preset = PRESETS[name];
           state.palette = [...preset.palette];
           state.fonts = { ...preset.fonts };
+
+          // Update sliders to match preset approximates
+          if (preset.hue !== undefined) state.hue = preset.hue;
+          if (preset.saturation !== undefined) state.saturation = preset.saturation;
+
+          // Manually apply since palette is predefined
+          els.hueSlider.value = state.hue;
+          els.satSlider.value = state.saturation;
+
           applyState();
         }
 
@@ -896,14 +1062,10 @@
           loadGoogleFont(state.fonts.body);
 
           // Update Preview CSS
-          els.previewHeading.style.fontFamily = `"${state.fonts.heading}", serif`; // fallback generic
+          els.previewHeading.style.fontFamily = `"${state.fonts.heading}", serif`;
           els.previewSubhead.style.fontFamily = `"${state.fonts.heading}", serif`;
           els.previewBody.style.fontFamily = `"${state.fonts.body}", sans-serif`;
 
-          // Map palette to Preview Elements
-          // 0: Darkest (Text), 1: Primary, 2: Secondary, 3: Light Accent, 4: Background
-
-          // Ensure we have 5 colors minimum (presets might be accurate)
           const c = state.palette;
 
           // Apply to Preview Canvas
@@ -926,7 +1088,6 @@
           els.paletteGrid.innerHTML = '';
 
           state.palette.forEach((hex, index) => {
-            // Contrast checks
             const whiteRatio = getContrastRatio(hex, '#FFFFFF');
             const blackRatio = getContrastRatio(hex, '#000000');
 
@@ -935,7 +1096,6 @@
             const whiteClass = whiteRatio >= 4.5 ? 'pass' : 'fail';
             const blackClass = blackRatio >= 4.5 ? 'pass' : 'fail';
 
-            // Determine text color for the hex label based on background
             const labelColor = whiteRatio > blackRatio ? '#ffffff' : '#000000';
 
             const row = document.createElement('div');
@@ -972,6 +1132,8 @@
             id: Date.now(),
             palette: [...state.palette],
             fonts: { ...state.fonts },
+            hue: state.hue,
+            saturation: state.saturation,
           };
           state.favorites.unshift(combo);
           localStorage.setItem('aesthetic.favorites', JSON.stringify(state.favorites));
@@ -999,7 +1161,6 @@
             const li = document.createElement('li');
             li.className = 'fav-item';
 
-            // Mini swatches HTML
             const swatchesHtml = fav.palette
               .map((c) => `<div class="fav-swatch" style="background-color: ${c}"></div>`)
               .join('');
@@ -1031,10 +1192,9 @@
         }
 
         function copy(text) {
-          // Robust copy using fallback
           const textArea = document.createElement('textarea');
           textArea.value = text;
-          textArea.style.position = 'fixed'; // Avoid scrolling to bottom
+          textArea.style.position = 'fixed';
           document.body.appendChild(textArea);
           textArea.focus();
           textArea.select();
@@ -1071,6 +1231,7 @@
           const data = {
             palette: state.palette,
             fonts: state.fonts,
+            settings: { hue: state.hue, saturation: state.saturation },
             exportedAt: new Date().toISOString(),
           };
           copy(JSON.stringify(data, null, 2));
@@ -1093,7 +1254,6 @@
           state.theme = theme;
         }
 
-        // Expose functions needed for inline HTML events
         return {
           init,
           loadPreset,
@@ -1103,6 +1263,10 @@
             if (fav) {
               state.palette = [...fav.palette];
               state.fonts = { ...fav.fonts };
+              if (fav.hue !== undefined) state.hue = fav.hue;
+              if (fav.saturation !== undefined) state.saturation = fav.saturation;
+              els.hueSlider.value = state.hue;
+              els.satSlider.value = state.saturation;
               applyState();
             }
           },
@@ -1117,8 +1281,10 @@
         };
       })();
 
-      // Initialize App
-      document.addEventListener('DOMContentLoaded', App.init);
+      document.addEventListener('DOMContentLoaded', app.init); // Changed from App to app earlier in module definition, but missed the listener here? No, I defined `const app` above, so I need to check the listener line. Wait, I see I defined `const app` but the listener still says `App.init`. I need to change that.
+
+      // Fixing the last line to match the lowercase 'app' variable name
+      document.addEventListener('DOMContentLoaded', app.init);
     </script>
   </body>
 </html>
