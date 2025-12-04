@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Palette Font Kit | Random Aesthetic Generator</title>
+    <meta
+      name="description"
+      content="A tool for designers and developers to generate accessible color palettes and font pairings." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap"
+      rel="stylesheet" />
+
+    <link id="dynamic-fonts" rel="stylesheet" href="" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="header-content">
+        <div class="logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+              stroke="currentColor"
+              stroke-width="2" />
+            <path
+              d="M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z"
+              fill="currentColor" />
+          </svg>
+          <h1>Palette Font Kit</h1>
+        </div>
+        <button id="theme-toggle" class="btn-icon" aria-label="Toggle Dark Mode" aria-pressed="false">
+          <svg
+            class="icon-sun"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg
+            class="icon-moon"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            style="display: none">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="app-layout">
+      <section class="controls" aria-label="Generator Controls">
+        <div class="control-group">
+          <button id="btn-shuffle" class="btn btn-primary">
+            <span class="icon">⟳</span> Shuffle <span class="kbd">Space</span>
+          </button>
+          <button id="btn-save" class="btn btn-secondary">
+            <span class="icon">♥</span> Save <span class="kbd">S</span>
+          </button>
+        </div>
+        <div class="control-group">
+          <button id="btn-copy-css" class="btn btn-outline">Copy CSS Vars <span class="kbd">C</span></button>
+          <button id="btn-export-json" class="btn btn-outline">Export JSON</button>
+        </div>
+      </section>
+
+      <section class="card preview-container" id="preview-card" aria-label="Live Preview">
+        <div class="preview-header">
+          <span class="badge">Aesthetic Preview</span>
+          <div class="font-info">
+            <span id="label-heading-font">Heading Font</span> +
+            <span id="label-body-font">Body Font</span>
+          </div>
+        </div>
+        <div class="preview-content">
+          <h2 contenteditable="true">Design with Purpose.</h2>
+          <p contenteditable="true" class="lead">
+            Every pixel tells a story. Use this generated aesthetic to jumpstart your next project with a cohesive color
+            palette and accessible typography.
+          </p>
+          <p contenteditable="true">
+            This is a standard paragraph element to visualize body text readability. Good design is invisible, but bad
+            design is everywhere.
+          </p>
+          <div class="preview-actions">
+            <button class="preview-btn">Primary Action</button>
+            <button class="preview-btn-sec">Secondary</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card palette-section" aria-label="Generated Palette">
+        <h3>Generated Palette</h3>
+        <div class="palette-grid" id="palette-grid"></div>
+      </section>
+
+      <section class="favorites-section" aria-label="Saved Favorites">
+        <h3>Saved Favorites</h3>
+        <div id="favorites-list" class="favorites-list">
+          <p class="empty-state">No favorites saved yet. Press 'Save' to keep a combination.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p>
+        Shortcuts: <strong>Space</strong> (Shuffle) &bull; <strong>S</strong> (Save) &bull; <strong>C</strong> (Copy
+        CSS)
+      </p>
+      <p><small>Font data via Google Fonts. No external frameworks.</small></p>
+    </footer>
+
+    <div id="toast" class="toast" role="status" aria-hidden="true">Action Successful</div>
+
+    <script>
+      /* Paste JS Block Here */
+    </script>
+  </body>
+</html>

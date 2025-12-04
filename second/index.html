@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Palette Font Kit | Random Aesthetic Generator</title>
+    <meta name="description" content="Generate accessible color palettes and font pairings." />
+
+    <!-- UI Fonts: Inter and Source Sans 3 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Sans+3:wght@400;500;600&display=swap"
+      rel="stylesheet" />
+
+    <style>
+      /* --- CSS Variables & Reset --- */
+      :root {
+        /* Light Theme Defaults */
+        --bg-body: #f9fafb;
+        --bg-card: #ffffff;
+        --text-main: #111827;
+        --text-muted: #6b7280;
+        --border-color: #e5e7eb;
+        --accent: #6366f1;
+        --accent-hover: #4f46e5;
+        --focus-ring: rgba(99, 102, 241, 0.4);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --radius: 12px;
+        --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+        /* Badges */
+        --badge-pass-bg: #dcfce7;
+        --badge-pass-text: #166534;
+        --badge-fail-bg: #fee2e2;
+        --badge-fail-text: #991b1b;
+      }
+
+      /* Dark Theme Overrides */
+      html.theme-dark {
+        --bg-body: #111827; /* Darker than #1e1e1e for better contrast */
+        --bg-card: #1f2937;
+        --text-main: #f9fafb;
+        --text-muted: #9ca3af;
+        --border-color: #374151;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Source Sans 3', sans-serif;
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        transition: background-color var(--transition), color var(--transition);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-family: 'Inter', sans-serif;
+      }
+      button {
+        cursor: pointer;
+        font-family: inherit;
+      }
+
+      /* --- Layout --- */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1.5rem;
+        width: 100%;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 2rem;
+      }
+
+      .logo {
+        font-weight: 700;
+        font-size: 1.5rem;
+        letter-spacing: -0.025em;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .logo svg {
+        width: 24px;
+        height: 24px;
+        color: var(--accent);
+      }
+
+      /* --- Controls --- */
+      .controls-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        padding: 0.625rem 1rem;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+
+      .btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        transform: translateY(-1px);
+      }
+
+      .btn:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
+      }
+
+      .btn-primary:hover {
+        background: var(--accent-hover);
+        color: white;
+      }
+
+      .theme-toggle {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        padding: 0.5rem;
+      }
+
+      .theme-toggle:hover {
+        color: var(--text-main);
+      }
+
+      /* --- Grid Layout --- */
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      @media (min-width: 900px) {
+        .dashboard-grid {
+          grid-template-columns: 2fr 1.2fr;
+          grid-template-rows: auto auto;
+        }
+        .preview-section {
+          grid-column: 1;
+          grid-row: 1 / span 2;
+        }
+        .palette-section {
+          grid-column: 2;
+        }
+        .favorites-section {
+          grid-column: 2;
+        }
+      }
+
+      .card {
+        background: var(--bg-card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 1.5rem;
+        border: 1px solid var(--border-color);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.25rem;
+      }
+
+      .card-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+      }
+
+      /* --- Palette Section --- */
+      .palette-grid {
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      .swatch-row {
+        display: flex;
+        align-items: stretch;
+        height: 4rem;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      /* Interactive Swatch */
+      .color-block {
+        flex: 1;
+        position: relative;
+        cursor: copy;
+        transition: transform 0.15s ease;
+      }
+
+      .color-block:hover {
+        flex: 1.2;
+      }
+      .color-block:focus-visible {
+        outline: 2px solid var(--text-main);
+        z-index: 10;
+      }
+
+      .color-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        margin-top: 0.25rem;
+      }
+
+      .color-hex {
+        font-family: monospace;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+
+      .contrast-badges {
+        display: flex;
+        gap: 0.25rem;
+      }
+
+      .badge {
+        font-size: 0.65rem;
+        padding: 0.125rem 0.375rem;
+        border-radius: 4px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .badge.pass {
+        background: var(--badge-pass-bg);
+        color: var(--badge-pass-text);
+      }
+      .badge.fail {
+        background: var(--badge-fail-bg);
+        color: var(--badge-fail-text);
+      }
+
+      /* --- Preview Section --- */
+      /* Neutral white canvas for preview to ensure color accuracy */
+      .preview-canvas {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 2rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 300px;
+        transition: opacity 0.3s ease;
+      }
+
+      /* Generated Content Styles - Targeted via ID */
+      #preview-heading {
+        line-height: 1.2;
+        margin-bottom: 1rem;
+        font-size: 2.5rem;
+        transition: color 0.3s ease;
+      }
+
+      #preview-subhead {
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.9;
+        line-height: 1.4;
+      }
+
+      #preview-body {
+        line-height: 1.6;
+        margin-bottom: 2rem;
+        max-width: 65ch;
+      }
+
+      #preview-btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 4px; /* Default slightly sharper */
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: default; /* It's a sample */
+        display: inline-block;
+      }
+
+      .font-meta {
+        margin-top: 1rem;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        border-top: 1px solid var(--border-color);
+        padding-top: 1rem;
+      }
+
+      /* --- Favorites --- */
+      .favorites-list {
+        list-style: none;
+        max-height: 250px;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+      }
+
+      .fav-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        background: var(--bg-body);
+        transition: border-color 0.2s;
+      }
+
+      .fav-item:hover {
+        border-color: var(--accent);
+      }
+
+      .fav-preview {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .fav-colors {
+        display: flex;
+        gap: 2px;
+      }
+
+      .fav-swatch {
+        width: 16px;
+        height: 16px;
+        border-radius: 2px;
+      }
+
+      .fav-fonts {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+
+      .fav-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .icon-btn {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        padding: 0.25rem;
+        border-radius: 4px;
+      }
+
+      .icon-btn:hover {
+        background: rgba(0, 0, 0, 0.05);
+        color: var(--text-main);
+      }
+      .icon-btn.delete:hover {
+        color: #ef4444;
+        background: #fee2e2;
+      }
+
+      /* --- Toast Notification --- */
+      #toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: var(--text-main);
+        color: var(--bg-body);
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transform: translateY(150%);
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 100;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
+
+      #toast.show {
+        transform: translateY(0);
+      }
+
+      footer {
+        margin-top: auto;
+        padding: 2rem 0;
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        border-top: 1px solid var(--border-color);
+      }
+
+      .shortcut-hint {
+        display: inline-block;
+        background: var(--border-color);
+        padding: 0.1rem 0.4rem;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.75rem;
+        margin: 0 0.2rem;
+      }
+
+      /* --- Responsive Adjustments --- */
+      @media (max-width: 640px) {
+        .controls-bar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .btn-group {
+          justify-content: center;
+          width: 100%;
+        }
+        .btn {
+          flex: 1;
+          justify-content: center;
+        }
+        h1 {
+          font-size: 1.25rem;
+        }
+        #preview-heading {
+          font-size: 1.75rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="logo">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+          </svg>
+          Palette Font Kit
+        </div>
+        <button id="theme-btn" class="theme-toggle" aria-label="Toggle Dark Mode">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5" />
+            <path
+              d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+          </svg>
+        </button>
+      </header>
+
+      <main>
+        <section class="controls-bar">
+          <!-- Defaults -->
+          <div class="btn-group">
+            <button class="btn" onclick="app.loadPreset('minimal')">Minimal</button>
+            <button class="btn" onclick="app.loadPreset('playful')">Playful</button>
+            <button class="btn" onclick="app.loadPreset('bold')">Bold</button>
+          </div>
+
+          <!-- Main Actions -->
+          <div class="btn-group">
+            <button class="btn btn-primary" id="shuffle-btn">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="16 3 21 3 21 8"></polyline>
+                <line x1="4" y1="20" x2="21" y2="3"></line>
+                <polyline points="21 16 21 21 16 21"></polyline>
+                <line x1="15" y1="15" x2="21" y2="21"></line>
+                <line x1="4" y1="4" x2="9" y2="9"></line>
+              </svg>
+              Shuffle
+            </button>
+            <button class="btn" id="save-btn" title="Save to Favorites (S)">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+              </svg>
+              Save
+            </button>
+            <button class="btn" id="copy-css-btn" title="Copy CSS Variables (C)">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+              </svg>
+              CSS
+            </button>
+            <button class="btn" id="export-json-btn">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              JSON
+            </button>
+          </div>
+        </section>
+
+        <div class="dashboard-grid">
+          <!-- Preview Section -->
+          <section class="preview-section">
+            <div class="card">
+              <div class="card-header">
+                <h2 class="card-title">Live Preview</h2>
+              </div>
+              <!-- The canvas is always white/neutral for accurate color rep -->
+              <div class="preview-canvas" id="preview-container">
+                <h1 id="preview-heading">Creative Design Harmony</h1>
+                <h3 id="preview-subhead">A curated approach to digital aesthetics.</h3>
+                <p id="preview-body">
+                  Visual hierarchy is essential for effective communication. By balancing typography weights with a
+                  cohesive color palette, we create interfaces that are not only beautiful but also accessible. This
+                  tool helps you discover unexpected combinations.
+                </p>
+                <div>
+                  <button id="preview-btn">Call to Action</button>
+                </div>
+              </div>
+              <div class="font-meta" id="font-meta">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </section>
+
+          <!-- Palette Info -->
+          <section class="palette-section">
+            <div class="card">
+              <div class="card-header">
+                <h2 class="card-title">Palette & Contrast</h2>
+              </div>
+              <div class="palette-grid" id="palette-grid">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </section>
+
+          <!-- Favorites -->
+          <section class="favorites-section">
+            <div class="card" style="max-height: 400px">
+              <div class="card-header">
+                <h2 class="card-title">Favorites</h2>
+                <button class="icon-btn" id="clear-favs" title="Clear all" aria-label="Clear all favorites">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                </button>
+              </div>
+              <ul class="favorites-list" id="favorites-list">
+                <!-- Populated by JS -->
+                <li style="text-align: center; color: var(--text-muted); padding: 1rem">No favorites saved yet.</li>
+              </ul>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <footer>
+        <p>
+          Shortcuts: <span class="shortcut-hint">Space</span> Shuffle &nbsp;|&nbsp;
+          <span class="shortcut-hint">S</span> Save &nbsp;|&nbsp; <span class="shortcut-hint">C</span> Copy CSS
+        </p>
+        <p style="margin-top: 0.5rem; opacity: 0.6">&copy; 2023 Palette Font Kit. Open Source.</p>
+      </footer>
+    </div>
+
+    <div id="toast">Copied to clipboard!</div>
+
+    <script>
+      /**
+       * Application Logic
+       * Pure Vanilla JS, no dependencies.
+       */
+
+      const FONT_LIBRARY = [
+        { name: 'Roboto', category: 'sans-serif' },
+        { name: 'Open Sans', category: 'sans-serif' },
+        { name: 'Montserrat', category: 'sans-serif' },
+        { name: 'Playfair Display', category: 'serif' },
+        { name: 'Lato', category: 'sans-serif' },
+        { name: 'Merriweather', category: 'serif' },
+        { name: 'Poppins', category: 'sans-serif' },
+        { name: 'Nunito', category: 'sans-serif' },
+        { name: 'Raleway', category: 'sans-serif' },
+        { name: 'Oswald', category: 'sans-serif' },
+        { name: 'Lora', category: 'serif' },
+        { name: 'Ubuntu', category: 'sans-serif' },
+        { name: 'Inter', category: 'sans-serif' },
+        { name: 'Rubik', category: 'sans-serif' },
+        { name: 'Work Sans', category: 'sans-serif' },
+        { name: 'DM Sans', category: 'sans-serif' },
+        { name: 'PT Serif', category: 'serif' },
+        { name: 'Quicksand', category: 'sans-serif' },
+        { name: 'Karla', category: 'sans-serif' },
+        { name: 'Arvo', category: 'serif' },
+      ];
+
+      const PRESETS = {
+        minimal: {
+          palette: ['#111827', '#374151', '#9CA3AF', '#F3F4F6', '#FFFFFF'],
+          fonts: { heading: 'Inter', body: 'Inter' },
+        },
+        playful: {
+          palette: ['#4C1D95', '#8B5CF6', '#F472B6', '#FDE047', '#FFFBEB'],
+          fonts: { heading: 'Quicksand', body: 'Nunito' },
+        },
+        bold: {
+          palette: ['#000000', '#D00000', '#FFBA08', '#3F88C5', '#F8F9FA'],
+          fonts: { heading: 'Oswald', body: 'Roboto' },
+        },
+      };
+
+      const App = (() => {
+        // State
+        let state = {
+          palette: [],
+          fonts: { heading: '', body: '' },
+          favorites: [],
+          theme: 'light',
+        };
+
+        // DOM Elements
+        const els = {
+          paletteGrid: document.getElementById('palette-grid'),
+          previewHeading: document.getElementById('preview-heading'),
+          previewSubhead: document.getElementById('preview-subhead'),
+          previewBody: document.getElementById('preview-body'),
+          previewBtn: document.getElementById('preview-btn'),
+          fontMeta: document.getElementById('font-meta'),
+          favoritesList: document.getElementById('favorites-list'),
+          toast: document.getElementById('toast'),
+          html: document.documentElement,
+        };
+
+        // --- Core Functions ---
+
+        function init() {
+          // Load from Storage
+          const savedSettings = localStorage.getItem('aesthetic.settings');
+          if (savedSettings) {
+            const settings = JSON.parse(savedSettings);
+            setTheme(settings.theme || 'light');
+          }
+
+          const savedFavs = localStorage.getItem('aesthetic.favorites');
+          if (savedFavs) {
+            state.favorites = JSON.parse(savedFavs);
+            renderFavorites();
+          }
+
+          // Start with Minimal
+          loadPreset('minimal');
+
+          // Event Listeners
+          document.getElementById('shuffle-btn').addEventListener('click', shuffle);
+          document.getElementById('save-btn').addEventListener('click', saveFavorite);
+          document.getElementById('copy-css-btn').addEventListener('click', copyCSS);
+          document.getElementById('export-json-btn').addEventListener('click', exportJSON);
+          document.getElementById('theme-btn').addEventListener('click', toggleTheme);
+          document.getElementById('clear-favs').addEventListener('click', clearFavorites);
+
+          // Keyboard Shortcuts
+          document.addEventListener('keydown', (e) => {
+            // Ignore if in input
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+            if (e.code === 'Space') {
+              e.preventDefault();
+              shuffle();
+            } else if (e.key.toLowerCase() === 's') {
+              saveFavorite();
+            } else if (e.key.toLowerCase() === 'c') {
+              copyCSS();
+            }
+          });
+        }
+
+        // --- Logic: Colors ---
+
+        function generatePalette() {
+          // HSL based generation for better cohesion
+          const hue = Math.floor(Math.random() * 360);
+          const saturation = Math.floor(Math.random() * 40) + 40; // 40-80%
+
+          // Strategy: Monochromatic with variation in Lightness
+          // Plus one accent color (Complementary or split)
+
+          const colors = [];
+
+          // Dark text/bg
+          colors.push(HSLtoHex(hue, saturation, 10));
+
+          // Main brand
+          colors.push(HSLtoHex(hue, saturation, 45));
+
+          // Secondary/Accent (Shift hue 30deg)
+          colors.push(HSLtoHex((hue + 30) % 360, saturation, 60));
+
+          // Light accent
+          colors.push(HSLtoHex(hue, saturation - 10, 85));
+
+          // Background
+          colors.push(HSLtoHex(hue, 10, 97));
+
+          return colors;
+        }
+
+        function HSLtoHex(h, s, l) {
+          l /= 100;
+          const a = (s * Math.min(l, 1 - l)) / 100;
+          const f = (n) => {
+            const k = (n + h / 30) % 12;
+            const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+            return Math.round(255 * color)
+              .toString(16)
+              .padStart(2, '0');
+          };
+          return `#${f(0)}${f(8)}${f(4)}`;
+        }
+
+        // --- Logic: Fonts ---
+
+        function pickFontPair() {
+          const heading = FONT_LIBRARY[Math.floor(Math.random() * FONT_LIBRARY.length)];
+          let body;
+
+          // Simple logic: If heading is Serif, make body Sans. If heading Sans, body Sans.
+          // Avoid Serif body for UI typically, but for this preview let's stick to readable Sans for body mostly.
+
+          if (heading.category === 'serif') {
+            const sansList = FONT_LIBRARY.filter((f) => f.category === 'sans-serif');
+            body = sansList[Math.floor(Math.random() * sansList.length)];
+          } else {
+            // Random anything else
+            const remaining = FONT_LIBRARY.filter((f) => f.name !== heading.name);
+            body = remaining[Math.floor(Math.random() * remaining.length)];
+          }
+
+          return { heading: heading.name, body: body.name };
+        }
+
+        function loadGoogleFont(fontName) {
+          const id = `font-${fontName.replace(/\s+/g, '-')}`;
+          if (!document.getElementById(id)) {
+            const link = document.createElement('link');
+            link.id = id;
+            link.rel = 'stylesheet';
+            link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(
+              /\s+/g,
+              '+'
+            )}:wght@400;700&display=swap`;
+            document.head.appendChild(link);
+          }
+        }
+
+        // --- Logic: Contrast (WCAG 2.1) ---
+
+        function getLuminance(hex) {
+          const rgb = parseInt(hex.slice(1), 16);
+          const r = ((rgb >> 16) & 0xff) / 255;
+          const g = ((rgb >> 8) & 0xff) / 255;
+          const b = ((rgb >> 0) & 0xff) / 255;
+
+          const a = [r, g, b].map((v) => {
+            return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+          });
+          return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+        }
+
+        function getContrastRatio(hex1, hex2) {
+          const lum1 = getLuminance(hex1);
+          const lum2 = getLuminance(hex2);
+          const brightest = Math.max(lum1, lum2);
+          const darkest = Math.min(lum1, lum2);
+          return (brightest + 0.05) / (darkest + 0.05);
+        }
+
+        // --- Actions ---
+
+        function shuffle() {
+          state.palette = generatePalette();
+          state.fonts = pickFontPair();
+          applyState();
+        }
+
+        function loadPreset(name) {
+          const preset = PRESETS[name];
+          state.palette = [...preset.palette];
+          state.fonts = { ...preset.fonts };
+          applyState();
+        }
+
+        function applyState() {
+          // Load Fonts
+          loadGoogleFont(state.fonts.heading);
+          loadGoogleFont(state.fonts.body);
+
+          // Update Preview CSS
+          els.previewHeading.style.fontFamily = `"${state.fonts.heading}", serif`; // fallback generic
+          els.previewSubhead.style.fontFamily = `"${state.fonts.heading}", serif`;
+          els.previewBody.style.fontFamily = `"${state.fonts.body}", sans-serif`;
+
+          // Map palette to Preview Elements
+          // 0: Darkest (Text), 1: Primary, 2: Secondary, 3: Light Accent, 4: Background
+
+          // Ensure we have 5 colors minimum (presets might be accurate)
+          const c = state.palette;
+
+          // Apply to Preview Canvas
+          els.previewHeading.style.color = c[0];
+          els.previewSubhead.style.color = c[1];
+          els.previewBody.style.color = c[1];
+
+          // Button styles
+          els.previewBtn.style.backgroundColor = c[1];
+          els.previewBtn.style.color = getContrastRatio(c[1], '#ffffff') > 3 ? '#ffffff' : '#000000';
+          els.previewBtn.style.fontFamily = `"${state.fonts.body}", sans-serif`;
+
+          // Meta Info
+          els.fontMeta.innerHTML = `<strong>Heading:</strong> ${state.fonts.heading} &nbsp;•&nbsp; <strong>Body:</strong> ${state.fonts.body}`;
+
+          renderPaletteUI();
+        }
+
+        function renderPaletteUI() {
+          els.paletteGrid.innerHTML = '';
+
+          state.palette.forEach((hex, index) => {
+            // Contrast checks
+            const whiteRatio = getContrastRatio(hex, '#FFFFFF');
+            const blackRatio = getContrastRatio(hex, '#000000');
+
+            const whitePass = whiteRatio >= 4.5 ? 'AA' : 'Fail';
+            const blackPass = blackRatio >= 4.5 ? 'AA' : 'Fail';
+            const whiteClass = whiteRatio >= 4.5 ? 'pass' : 'fail';
+            const blackClass = blackRatio >= 4.5 ? 'pass' : 'fail';
+
+            // Determine text color for the hex label based on background
+            const labelColor = whiteRatio > blackRatio ? '#ffffff' : '#000000';
+
+            const row = document.createElement('div');
+            row.className = 'palette-item';
+            row.innerHTML = `
+                    <div class="swatch-row">
+                        <div class="color-block" 
+                             style="background-color: ${hex}; color: ${labelColor}" 
+                             role="button" 
+                             tabindex="0"
+                             aria-label="Color ${hex}. Click to copy."
+                             onclick="app.copy('${hex}')"
+                             onkeydown="if(event.key === 'Enter') app.copy('${hex}')">
+                        </div>
+                    </div>
+                    <div class="color-info">
+                        <span class="color-hex">${hex}</span>
+                        <div class="contrast-badges">
+                            <span class="badge ${whiteClass}" title="Contrast vs White: ${whiteRatio.toFixed(
+              2
+            )}">W: ${whitePass}</span>
+                            <span class="badge ${blackClass}" title="Contrast vs Black: ${blackRatio.toFixed(
+              2
+            )}">B: ${blackPass}</span>
+                        </div>
+                    </div>
+                `;
+            els.paletteGrid.appendChild(row);
+          });
+        }
+
+        function saveFavorite() {
+          const combo = {
+            id: Date.now(),
+            palette: [...state.palette],
+            fonts: { ...state.fonts },
+          };
+          state.favorites.unshift(combo);
+          localStorage.setItem('aesthetic.favorites', JSON.stringify(state.favorites));
+          renderFavorites();
+          showToast('Saved to favorites');
+        }
+
+        function clearFavorites() {
+          if (state.favorites.length === 0) return;
+          state.favorites = [];
+          localStorage.setItem('aesthetic.favorites', JSON.stringify(state.favorites));
+          renderFavorites();
+          showToast('All favorites cleared');
+        }
+
+        function renderFavorites() {
+          els.favoritesList.innerHTML = '';
+          if (state.favorites.length === 0) {
+            els.favoritesList.innerHTML =
+              '<li style="text-align: center; color: var(--text-muted); padding: 1rem;">No favorites saved yet.</li>';
+            return;
+          }
+
+          state.favorites.forEach((fav) => {
+            const li = document.createElement('li');
+            li.className = 'fav-item';
+
+            // Mini swatches HTML
+            const swatchesHtml = fav.palette
+              .map((c) => `<div class="fav-swatch" style="background-color: ${c}"></div>`)
+              .join('');
+
+            li.innerHTML = `
+                    <div class="fav-preview">
+                        <div class="fav-colors">${swatchesHtml}</div>
+                        <div class="fav-fonts">${fav.fonts.heading} / ${fav.fonts.body}</div>
+                    </div>
+                    <div class="fav-actions">
+                        <button class="icon-btn" onclick="app.loadFav(${fav.id})" title="Load">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </button>
+                        <button class="icon-btn delete" onclick="app.deleteFav(${fav.id})" title="Delete">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        </button>
+                    </div>
+                `;
+            els.favoritesList.appendChild(li);
+          });
+        }
+
+        // --- Utilities ---
+
+        function showToast(msg) {
+          els.toast.textContent = msg;
+          els.toast.classList.add('show');
+          setTimeout(() => els.toast.classList.remove('show'), 2000);
+        }
+
+        function copy(text) {
+          // Robust copy using fallback
+          const textArea = document.createElement('textarea');
+          textArea.value = text;
+          textArea.style.position = 'fixed'; // Avoid scrolling to bottom
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+
+          try {
+            const successful = document.execCommand('copy');
+            if (successful) showToast(`Copied ${text}`);
+          } catch (err) {
+            console.error('Fallback: Oops, unable to copy', err);
+          }
+
+          document.body.removeChild(textArea);
+        }
+
+        function copyCSS() {
+          const css = `
+/* CSS Variables */
+:root {
+    --color-primary: ${state.palette[1]};
+    --color-secondary: ${state.palette[2]};
+    --color-accent: ${state.palette[3]};
+    --color-bg: ${state.palette[4]};
+    --color-text: ${state.palette[0]};
+    
+    --font-heading: '${state.fonts.heading}', serif;
+    --font-body: '${state.fonts.body}', sans-serif;
+}
+            `.trim();
+          copy(css);
+          showToast('CSS variables copied!');
+        }
+
+        function exportJSON() {
+          const data = {
+            palette: state.palette,
+            fonts: state.fonts,
+            exportedAt: new Date().toISOString(),
+          };
+          copy(JSON.stringify(data, null, 2));
+          showToast('JSON copied to clipboard!');
+        }
+
+        function toggleTheme() {
+          const newTheme = state.theme === 'light' ? 'dark' : 'light';
+          state.theme = newTheme;
+          setTheme(newTheme);
+          localStorage.setItem('aesthetic.settings', JSON.stringify({ theme: newTheme }));
+        }
+
+        function setTheme(theme) {
+          if (theme === 'dark') {
+            els.html.classList.add('theme-dark');
+          } else {
+            els.html.classList.remove('theme-dark');
+          }
+          state.theme = theme;
+        }
+
+        // Expose functions needed for inline HTML events
+        return {
+          init,
+          loadPreset,
+          copy,
+          loadFav: (id) => {
+            const fav = state.favorites.find((f) => f.id === id);
+            if (fav) {
+              state.palette = [...fav.palette];
+              state.fonts = { ...fav.fonts };
+              applyState();
+            }
+          },
+          deleteFav: (id) => {
+            state.favorites = state.favorites.filter((f) => f.id !== id);
+            localStorage.setItem('aesthetic.favorites', JSON.stringify(state.favorites));
+            renderFavorites();
+          },
+          copyCSS,
+          exportJSON,
+          toggleTheme,
+        };
+      })();
+
+      // Initialize App
+      document.addEventListener('DOMContentLoaded', App.init);
+    </script>
+  </body>
+</html>
